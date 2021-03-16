@@ -1,0 +1,8 @@
+*.aux
+*.depytx
+*.log
+*.pdf
+*.pytxcode
+*.synctex.gz
+*/__pycache__/
+pythontex-files-*

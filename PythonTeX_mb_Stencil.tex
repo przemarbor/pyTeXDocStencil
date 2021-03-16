@@ -1,0 +1,472 @@
+\documentclass[11pt]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   pythontex ->
+% Extracts from the Poore's python_gallery.tex:
+% https://github.com/gpoore/pythontex/tree/master/pythontex_gallery
+
+
+% Engine-specific settings
+% Detect pdftex/xetex/luatex, and load appropriate font packages.
+% This is inspired by the approach in the iftex package.
+% pdftex:
+\ifx\pdfmatch\undefined
+\else
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+\fi
+% xetex:
+\ifx\XeTeXinterchartoks\undefined
+\else
+    \usepackage{fontspec}
+    \defaultfontfeatures{Ligatures=TeX}
+\fi
+% luatex:
+\ifx\directlua\undefined
+\else
+    \usepackage{fontspec}
+\fi
+% End engine-specific settings
+
+\usepackage{amsmath,amssymb}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage[svgnames]{xcolor}
+\usepackage{url}
+\urlstyle{same}
+
+
+%\usepackage[makestderr]{pythontex}
+\usepackage[depythontex]{pythontex}  % option neede if you want to depythonize the tex source, then run 
+% % depythontex3 -o outputFileName.tex thisFileName.tex
+%\usepackage[gobble=auto]{pythontex}
+% \restartpythontexsession{\thesection}  % don't do this if you want to access variable in the scope of the whole document!
+
+
+\usepackage[framemethod=TikZ]{mdframed}
+
+\newcommand{\pytex}{Python\TeX}
+\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   pythontex <-
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mbpythontex -> 
+
+\begin{pycode}
+################################################################
+# global functions
+################################################################
+
+# how to keep fraction in sympy output (not implemented yet):
+# https://stackoverflow.com/questions/52402817/how-to-keep-the-fraction-in-the-output-without-evaluating
+
+def round_expr(expr, num_digits):
+    # how to print sympy numbers rounded to n decimals:
+    # https://stackoverflow.com/questions/48491577/printing-the-output-rounded-to-3-decimals-in-sympy
+    
+    import sympy as sp
+    return expr.xreplace(
+            {n : round(n, num_digits) for n in expr.atoms(sp.Number)}
+            )
+
+def matrix(M, mtype='matrix', dec=5):
+    """Return the latex representation of sympy or numpy matrix"""
+    # types of matrices can be found here:
+    # https://www.math-linux.com/latex-26/faq/latex-faq/article/how-to-write-matrices-in-latex-matrix-pmatrix-bmatrix-vmatrix-vmatrix
+    
+    import sympy as sp
+    
+    S = sp.Matrix(M) # converting to sympy Matrix in case M is a numpy matrix
+    
+    S = round_expr(S, dec) # rounding to specific number of decimals
+    
+    latexStr =  sp.latex(S)
+    latexStr = latexStr.replace('matrix',mtype)
+    
+    return latexStr
+
+
+def pmatrix(M, dec=5):
+    """Return the latex representation of sympy or numpy matrix"""
+    # types of matrices can be found here:
+    # https://www.math-linux.com/latex-26/faq/latex-faq/article/how-to-write-matrices-in-latex-matrix-pmatrix-bmatrix-vmatrix-vmatrix
+    
+    return matrix(M,mtype='pmatrix',dec=dec)
+    
+def bmatrix(M, dec=5):
+    """Return the latex representation of sympy or numpy matrix"""
+    # types of matrices can be found here:
+    # https://www.math-linux.com/latex-26/faq/latex-faq/article/how-to-write-matrices-in-latex-matrix-pmatrix-bmatrix-vmatrix-vmatrix
+    
+    return matrix(M,mtype='bmatrix',dec=dec)
+
+\end{pycode}
+
+% % % \usepackage{mbpytex}
+
+% Definition of folder names for LaTeX is loaded from mbpytex.py
+%[preamble]
+
+\begin{pycode}
+import  numpy as np
+import  sympy as sp
+
+from mbpytex import mbpytex as mbp
+
+# global project parameters
+auxFilesFolder = 'auxFiles/'
+figuresFolder  = 'figures/'
+\end{pycode}
+
+\newcommand{\auxFilesFolder}{auxFiles/}
+\newcommand{\figuresFolder}{figures/}
+
+
+\newcommand{\mtx}[1]{\py{mbp.matrix(#1)}}
+\newcommand{\mtxb}[1]{\py{mbp.matrix(#1)}}
+\newcommand{\mtxp}[1]{\py{mbp.matrix(#1)}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mbpythontex <-
+
+%\usepackage[polish]{babel}
+\usepackage[english]{babel}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[a4paper,left=3.5cm,right=2cm,top=2cm,bottom=2.5cm,includefoot=false,includehead=false,footskip=1.16cm]{geometry} 	% page dimensions
+
+
+
+
+\usepackage{subfigure}
+
+
+% if you want to compress all
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+%\usepackage[colorinlistoftodos,prependcaption,textsize=tiny,disable]{todonotes}
+
+\usepackage{xargs}    % Use more than one optional parameter in the new commands
+% margin note
+\newcommandx{\MB}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+% plain text note 
+% \newcommand{\MBp}{\textcolor{red!75}}  <- this does not work on paragraphs
+\newcommand{\MBp}[1]{{\leavevmode\color{red!75}#1}}
+% edit
+\newcommand{\MBe}[2]{{\leavevmode\color{red!75}{#1}}{{\leavevmode\color{red!25}\st{#2}}}}
+
+
+
+%% dots after section/subsection number in Table of Contents
+%\usepackage{tocloft} 					
+%\renewcommand{\cftsecaftersnum}{.}
+%\renewcommand{\cftsubsecaftersnum}{.}
+%\renewcommand{\cftsubsubsecaftersnum}{.}
+
+
+
+\title{\pytex\ stencil and examples}
+\author{MB}
+
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This document is a part of a stencil of a reproducible research approach project with a small additional auxiliary python package for easy handling numpy/sympy matrices printing in ...
+\end{abstract}
+
+
+\section{Introduction}
+
+\section{Examples of pythontex commands, their usage and/or description}
+
+\begin{itemize}
+
+\item 
+\verb|begin{pycode}| -- executes the code inside the environment. If any \verb|print| function is run inside it, the results of printing are printed 
+-- code is executed and not typeset
+
+Example:
+
+\begin{verbatim}
+# This is not executable part of the document! It's only a text in verbatim!
+\begin{pycode}
+a = 123.45
+s = 'This is string'
+b = a+2
+
+print(b)
+print(s)
+\end{pycode}
+\end{verbatim}
+
+produces:
+
+\begin{pycode}
+a = 123.45
+s = 'This is string'
+b = a+2
+
+print(b)
+print(s)
+\end{pycode}
+
+
+\item 
+\verb|begin{pysub}| -- " useful for inserting Python-generated content in contexts where the normal \verb|\py| and \verb|\pyc| would not function or would be inconvenient due to the restrictions imposed by LATEX. Since Python processes $\langle code \rangle$ and performs substitutions before the result is passed to LATEX, substitution fields may be anywhere."
+
+{\bf I stumbled on the errors when depythonizing the source while having \verb|\pysub| environment in it}. That is why \verb|\pysub| code is commented out in this document.
+
+%\begin{pysub}
+%a = 123.45
+%s = 'This is string'
+%b = a+2
+%
+%!{print('AAAAAAAAA')}
+%
+%print(b)
+%print(s)
+%\end{pysub}
+
+\item 
+\verb|begin{pyverbatim}| -- like \verb|begin{verbatim} + begin{pycode}| -- code is typeset and not executed
+
+\item 
+\verb|begin{pyblock}| -- the same as \verb|begin{pycode}| but the code inside the environment is additionally printed 
+-- code is typeset and executed
+
+\item Examples with \verb|\py, \pyc, \pyb| 
+
+\begin{itemize}
+\item \verb|\py| -- prints out the value of the variable or the command, provided it can be stringified
+
+\py{a}
+
+\py{10*2+4}
+
+\py{s}
+
+\item \verb|\pyc| -- inline version of \verb|begin{pycode}|
+
+-- execute, not typeset
+
+\pyc{1+1}
+
+\pyc{print(1+1)}
+
+\pyc{print(a)}
+
+
+\item \verb|\pys| -- prints out what is inside of the braces (kind of verbatim environment) -- like \verb|\begin{pysub}|
+
+\pys{1+1}
+
+\pys{a}
+
+\pys{print(a)}
+
+\item \verb|\pyb| -- like \verb|\pys| but it colourizes the printout
+
+\pyb{1+1}
+
+\pyb{a}
+
+\pyb{print(a)}
+
+\end{itemize}
+
+\end{itemize}
+
+\section{Examples of usage of mbpytex auxiliary functions}
+
+
+\subsection{Pretty printouts of numpy/sympy matrices}
+
+\subsubsection{numpy}
+\begin{pyblock}
+import numpy as np
+
+A = np.array([[1,2,1],
+              [0,3,1],
+              [2,1,1]])
+              
+v = np.array([[2],
+              [0],
+              [1]])
+              
+b = A@v
+\end{pyblock}
+
+Since the following lines 
+\begin{verbatim}
+\begin{pycode}
+from mbpytex import mbpytex as mbp
+# from mbpytex.mbpytex import npmatrix
+\end{pycode}
+\end{verbatim}
+are included at the beginning of the document, now we can write
+
+\begin{verbatim}
+\begin{equation}
+\left[
+\py{mbp.matrix(A)}
+\right]
+\end{equation}
+\end{verbatim}
+%%%%or
+%%%%\begin{verbatim}
+%%%%$\py{matrix(A)}$
+%%%%\end{verbatim}
+
+which produce
+
+\begin{equation}
+\left[
+\py{mbp.matrix(A)}
+\right]
+\end{equation}
+
+%%%%$\py{matrix(A)}$
+
+\vspace{0.5cm}
+
+We can even latexify pythontex commands like this! (see the beginning of the file) and hide pythontex under the latex commands:
+\begin{verbatim}
+\newcommand{\mtx}[1]{\py{mbp.npbmatrix(#1)}}
+\newcommand{\mtxb}[1]{\py{mbp.npbmatrix(#1)}}
+\newcommand{\mtxp}[1]{\py{mbp.nppmatrix(#1)}}
+\end{verbatim}
+
+Then we can use
+\verb|$\mtxb{A}$|
+which produces
+$\py{mbp.matrix(A)}$ % $\mtxb{A}$
+
+Column vector printout is done properly:
+
+$\py{mbp.matrix(v)}$ %$\mtxb{v}$
+
+%% % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\subsubsection{sympy}
+
+We can do sympy calculations in plain \verb|\pyblock| after importing numpy:
+\begin{pyblock}
+from sympy import *
+
+x = symbols('aa')
+k = Symbol("k")
+As1 = Matrix([[k,2,1],
+              [0,k,1],
+              [2,1,k]])
+
+ss = latex(As1)
+\end{pyblock}
+
+and access the variables in the same way as above: $\py{ss}$
+
+But we can also use special environments with \verb|sym| prefix added, like \verb|sympyblock|. There are two remarks that need to be made here:
+\begin{itemize}
+\item The difference in usage between those two approaches is that in \verb|sympyblock| there is no need to import sympy. It is imported by default like if we used ''\verb|from sympy import *|'' in \verb|pyblock| environment.
+
+\item Commands \verb|sympyblock| and \verb|pyblock| are run in {\bf two different sessions}. So the {\bf variables from the one context are not accessible from inside the other one}.
+\end{itemize}
+
+
+\begin{sympyblock}
+# no need to import sympy. It is already done by sympyblock environement!
+
+k = Symbol("k")
+
+As2 = Matrix([[1,2,1],
+              [0,k,1],
+              [2,1,1]])
+              
+vs2 = Matrix([[2],
+              [0],
+              [1]])
+
+bs2 = As2@vs2
+bs2 = As2 @ vs2
+\end{sympyblock}
+
+Now, with \verb|\sympy{latex(As2)}| we can obtain:
+$\sympy{latex(As2)}$.
+
+Remember, that now you cannot do:
+\verb|\sympy{latex(As1)}| or \verb|\py{latex(As2)}| because \verb|As1| was created in the context of \verb|\py| environment, and \verb|As2| was created in the context of \verb|\sympy| environment. 
+
+Since we want to have homogeneous access both to numpy and to sympy libraries, in \verb|mbpytex| we assume that the main document context is \verb|\py|/,\verb|\pyblock|/\verb|\pycode|, etc... and we need to import both numpy and sympy libraries explicitly in it.
+
+\section{Summary - cheat sheet of mbpytex library}
+
+%\subsection{Matrix typesetting}
+%Use: \verb|mtx| command or its modified versions \verb|mtxb|, \verb|mtxp|,..., regardless whether you have numpy or sympy matrix.
+%
+%
+%$\mtx{np.array([[1,2,1],
+%               [0,3,1],
+%               [2,1,1]])}$
+%$\mtx{sp.Matrix([[1,2,3],
+%                 [2,3,4],
+%                 [3,4,5]])}$
+%
+%Just remember always to define the matrices inside \verb|py...| environments, because \verb|mtx| commands are defined within \verb|py...| context.
+%
+%\begin{pycode}
+%A = np.array([[1,2],
+%               [0,3]])
+%
+%S = sp.Matrix([[1,2],
+%               [0,3]])
+%\end{pycode}
+%
+%$\mtx{A}$ $\mtxb{S}$
+
+\subsection{Plots with matplotlib}
+
+We can create plots with matplotlib, perfectly matching the plot fonts with the document fonts.  No more searching for the code that created a figure!
+
+It is possible to pass page dimensions and similar contextual information from the \LaTeX\ side to the Python side.  If you want your figures to be, for example, a particular fraction of the page width, you can pass the value of \pygment{latex}{\textwidth} to the Python side, and use it in creating your figures.  See \pygment{latex}{\setpythontexcontext} in the main documentation for details.
+
+You may want to use matplotlib's PGF backend when creating plots.
+
+\begin{pyblock}
+import matplotlib.pyplot as plt
+import numpy as np
+
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
+plt.rc('font', size=10.0)
+plt.rc('legend', fontsize=10.0)
+plt.rc('font', weight='normal')
+
+x = np.linspace(0, 10)
+plt.figure(figsize=(4, 2.5))
+plt.plot(x, np.sin(x), label='$\sin(x)$')
+plt.xlabel(r'$x\mathrm{-axis}$')
+plt.ylabel(r'$y\mathrm{-axis}$')
+plt.legend(loc='lower right')
+plt.savefig(figuresFolder+'myplot.pdf', bbox_inches='tight')
+plt.savefig(figuresFolder+'myplot.png', bbox_inches='tight')
+\end{pyblock}
+
+\begin{center}
+\includegraphics{\figuresFolder myplot.pdf}
+\end{center}
+
+
+
+
+
+
+\end{document}
