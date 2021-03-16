@@ -3,6 +3,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   pythontex ->
+
+% % % instead of including \usepackage{mbpytex}
+
 % Extracts from the Poore's python_gallery.tex:
 % https://github.com/gpoore/pythontex/tree/master/pythontex_gallery
 
@@ -37,8 +40,8 @@
 \urlstyle{same}
 
 
-%\usepackage[makestderr]{pythontex}
-\usepackage[depythontex]{pythontex}  % option neede if you want to depythonize the tex source, then run 
+\usepackage[makestderr]{pythontex}
+%\usepackage[depythontex]{pythontex}  % option neede if you want to depythonize the tex source, then run 
 % % depythontex3 -o outputFileName.tex thisFileName.tex
 %\usepackage[gobble=auto]{pythontex}
 % \restartpythontexsession{\thesection}  % don't do this if you want to access variable in the scope of the whole document!
@@ -58,57 +61,79 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mbpythontex -> 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% import mbpytex from the file or copy mbpytex.py into the file>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% import mbpytex ->
 \begin{pycode}
-################################################################
-# global functions
-################################################################
-
-# how to keep fraction in sympy output (not implemented yet):
-# https://stackoverflow.com/questions/52402817/how-to-keep-the-fraction-in-the-output-without-evaluating
-
-def round_expr(expr, num_digits):
-    # how to print sympy numbers rounded to n decimals:
-    # https://stackoverflow.com/questions/48491577/printing-the-output-rounded-to-3-decimals-in-sympy
-    
-    import sympy as sp
-    return expr.xreplace(
-            {n : round(n, num_digits) for n in expr.atoms(sp.Number)}
-            )
-
-def matrix(M, mtype='matrix', dec=5):
-    """Return the latex representation of sympy or numpy matrix"""
-    # types of matrices can be found here:
-    # https://www.math-linux.com/latex-26/faq/latex-faq/article/how-to-write-matrices-in-latex-matrix-pmatrix-bmatrix-vmatrix-vmatrix
-    
-    import sympy as sp
-    
-    S = sp.Matrix(M) # converting to sympy Matrix in case M is a numpy matrix
-    
-    S = round_expr(S, dec) # rounding to specific number of decimals
-    
-    latexStr =  sp.latex(S)
-    latexStr = latexStr.replace('matrix',mtype)
-    
-    return latexStr
-
-
-def pmatrix(M, dec=5):
-    """Return the latex representation of sympy or numpy matrix"""
-    # types of matrices can be found here:
-    # https://www.math-linux.com/latex-26/faq/latex-faq/article/how-to-write-matrices-in-latex-matrix-pmatrix-bmatrix-vmatrix-vmatrix
-    
-    return matrix(M,mtype='pmatrix',dec=dec)
-    
-def bmatrix(M, dec=5):
-    """Return the latex representation of sympy or numpy matrix"""
-    # types of matrices can be found here:
-    # https://www.math-linux.com/latex-26/faq/latex-faq/article/how-to-write-matrices-in-latex-matrix-pmatrix-bmatrix-vmatrix-vmatrix
-    
-    return matrix(M,mtype='bmatrix',dec=dec)
-
+from mbpytex.mbpytex import *
 \end{pycode}
+%%%%%%%%%%%%%%%%%%%%%%%%%%% import mbpytex <-
 
-% % % \usepackage{mbpytex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mbpytex.py copied into the file to make the file standalone
+%\begin{pycode}
+%# how to keep fraction in sympy output (not implemented yet):
+%# https://stackoverflow.com/questions/52402817/how-to-keep-the-fraction-in-the-output-without-evaluating
+%
+%def round_expr(expr, num_digits):
+%    # how to print sympy numbers rounded to n decimals:
+%    # https://stackoverflow.com/questions/48491577/printing-the-output-rounded-to-3-decimals-in-sympy
+%    
+%    import sympy as sp
+%    return expr.xreplace(
+%            {n : round(n, num_digits) for n in expr.atoms(sp.Number)})
+%
+%def matrix(M, mtype='matrix', dec=5):
+%    """Return the latex representation of sympy or numpy matrix"""
+%    # types of matrices can be found here:
+%    # https://www.math-linux.com/latex-26/faq/latex-faq/article/how-to-write-matrices-in-latex-matrix-pmatrix-bmatrix-vmatrix-vmatrix
+%    
+%    import sympy as sp
+%    
+%    S = sp.Matrix(M) # converting to sympy Matrix in case M is a numpy matrix
+%    
+%    S = round_expr(S, dec) # rounding to specific number of decimals
+%        
+%    latexStr =  sp.latex(S)
+%
+%    if mtype!='matrix':
+%        latexStr = latexStr.replace('matrix',mtype)
+%
+%    latexStr = latexStr.replace('\\left[','')
+%    latexStr = latexStr.replace('\\right]','')
+%    
+%    return latexStr
+%
+%
+%def pmatrix(M, dec=5):
+%    """Return the latex representation of sympy or numpy matrix"""
+%    # types of matrices can be found here:
+%    # https://www.math-linux.com/latex-26/faq/latex-faq/article/how-to-write-matrices-in-latex-matrix-pmatrix-bmatrix-vmatrix-vmatrix
+%    
+%    return matrix(M,mtype='pmatrix',dec=dec)
+%    
+%def bmatrix(M, dec=5):
+%    """Return the latex representation of sympy or numpy matrix"""
+%    # types of matrices can be found here:
+%    # https://www.math-linux.com/latex-26/faq/latex-faq/article/how-to-write-matrices-in-latex-matrix-pmatrix-bmatrix-vmatrix-vmatrix
+%    
+%    return matrix(M,mtype='bmatrix',dec=dec)
+%
+%def m2l(M):
+%    """Wrapper function with short name"""
+%    return bmatrix(M)
+%\end{pycode}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mbpytex.py copied into the file
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% import mbpytex from the file or copy mbpytex.py into the file<
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 % Definition of folder names for LaTeX is loaded from mbpytex.py
 %[preamble]
@@ -116,8 +141,6 @@ def bmatrix(M, dec=5):
 \begin{pycode}
 import  numpy as np
 import  sympy as sp
-
-from mbpytex import mbpytex as mbp
 
 # global project parameters
 auxFilesFolder = 'auxFiles/'
@@ -127,10 +150,12 @@ figuresFolder  = 'figures/'
 \newcommand{\auxFilesFolder}{auxFiles/}
 \newcommand{\figuresFolder}{figures/}
 
+% % Commands like this cannot be defined if you want to 
+% % depythonize the document later.
 
-\newcommand{\mtx}[1]{\py{mbp.matrix(#1)}}
-\newcommand{\mtxb}[1]{\py{mbp.matrix(#1)}}
-\newcommand{\mtxp}[1]{\py{mbp.matrix(#1)}}
+%\newcommand{\mtx}[1]{\py{matrix(#1)}}
+%\newcommand{\mtxb}[1]{\py{bmatrix(#1)}}
+%\newcommand{\mtxp}[1]{\py{pmatrix(#1)}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mbpythontex <-
@@ -309,8 +334,7 @@ b = A@v
 Since the following lines 
 \begin{verbatim}
 \begin{pycode}
-from mbpytex import mbpytex as mbp
-# from mbpytex.mbpytex import npmatrix
+from mbpytex.mbpytex import *
 \end{pycode}
 \end{verbatim}
 are included at the beginning of the document, now we can write
@@ -318,7 +342,7 @@ are included at the beginning of the document, now we can write
 \begin{verbatim}
 \begin{equation}
 \left[
-\py{mbp.matrix(A)}
+\py{matrix(A)}
 \right]
 \end{equation}
 \end{verbatim}
@@ -327,11 +351,11 @@ are included at the beginning of the document, now we can write
 %%%%$\py{matrix(A)}$
 %%%%\end{verbatim}
 
-which produce
+which produces
 
 \begin{equation}
 \left[
-\py{mbp.matrix(A)}
+\py{matrix(A)}
 \right]
 \end{equation}
 
@@ -339,21 +363,16 @@ which produce
 
 \vspace{0.5cm}
 
-We can even latexify pythontex commands like this! (see the beginning of the file) and hide pythontex under the latex commands:
+We could even latexify pythontex commands like this! (see the beginning of the file) and hide pythontex under the latex commands:
 \begin{verbatim}
-\newcommand{\mtx}[1]{\py{mbp.npbmatrix(#1)}}
-\newcommand{\mtxb}[1]{\py{mbp.npbmatrix(#1)}}
-\newcommand{\mtxp}[1]{\py{mbp.nppmatrix(#1)}}
+\newcommand{\mtx}[1]{\py{matrix(#1)}}
+\newcommand{\mtxb}[1]{\py{bmatrix(#1)}}
+\newcommand{\mtxp}[1]{\py{pmatrix(#1)}}
 \end{verbatim}
 
-Then we can use
-\verb|$\mtxb{A}$|
-which produces
-$\py{mbp.matrix(A)}$ % $\mtxb{A}$
-
-Column vector printout is done properly:
-
-$\py{mbp.matrix(v)}$ %$\mtxb{v}$
+Then we could use \verb|$\mtxb{A}$| to typeset the matrix.
+% $\mtxb{A}$
+{\bf But } there are problems with depythonizing documents with commands like the ones above. So, more versatile solution would be to avoid using those commands.
 
 %% % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
@@ -409,29 +428,32 @@ Since we want to have homogeneous access both to numpy and to sympy libraries, i
 
 \section{Summary - cheat sheet of mbpytex library}
 
-%\subsection{Matrix typesetting}
-%Use: \verb|mtx| command or its modified versions \verb|mtxb|, \verb|mtxp|,..., regardless whether you have numpy or sympy matrix.
-%
-%
-%$\mtx{np.array([[1,2,1],
-%               [0,3,1],
-%               [2,1,1]])}$
-%$\mtx{sp.Matrix([[1,2,3],
-%                 [2,3,4],
-%                 [3,4,5]])}$
-%
-%Just remember always to define the matrices inside \verb|py...| environments, because \verb|mtx| commands are defined within \verb|py...| context.
-%
-%\begin{pycode}
-%A = np.array([[1,2],
-%               [0,3]])
-%
-%S = sp.Matrix([[1,2],
-%               [0,3]])
-%\end{pycode}
-%
-%$\mtx{A}$ $\mtxb{S}$
+\subsection{Matrix typesetting}
+Use: \verb|\py{m2l(matrixname)}| command or its less concise versions \verb|\py{matrix(matrixname)}|, \verb|\py{matrixb(matrixname)}|, \verb|\py{matrixp(matrixname)}|..., regardless whether you have numpy or sympy matrix.
 
+$\py{m2l(np.array([[1,2,1],
+               [0,3,1],
+               [2,1,1]]))}$
+$\py{m2l(sp.Matrix([[1,2,3],
+                 [2,3,4],
+                 [3,4,5]]))}$
+
+\begin{pycode}
+A = np.array([[1,2],
+               [0,3]])
+
+x = np.array([[1],
+               [0]])
+
+b = A @ x
+S = sp.Matrix([[1,2],
+               [0,3]])
+\end{pycode}
+
+m2l = $\py{m2l(A)}$, 
+\quad
+wektor b = $\py{m2l(b)}$
+\quad 
 \subsection{Plots with matplotlib}
 
 We can create plots with matplotlib, perfectly matching the plot fonts with the document fonts.  No more searching for the code that created a figure!

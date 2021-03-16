@@ -15,8 +15,7 @@ def round_expr(expr, num_digits):
     
     import sympy as sp
     return expr.xreplace(
-            {n : round(n, num_digits) for n in expr.atoms(sp.Number)}
-            )
+            {n : round(n, num_digits) for n in expr.atoms(sp.Number)})
 
 def matrix(M, mtype='matrix', dec=5):
     """Return the latex representation of sympy or numpy matrix"""
@@ -28,9 +27,14 @@ def matrix(M, mtype='matrix', dec=5):
     S = sp.Matrix(M) # converting to sympy Matrix in case M is a numpy matrix
     
     S = round_expr(S, dec) # rounding to specific number of decimals
-    
+        
     latexStr =  sp.latex(S)
-    latexStr = latexStr.replace('matrix',mtype)
+
+    if mtype!='matrix':
+        latexStr = latexStr.replace('matrix',mtype)
+
+    latexStr = latexStr.replace('\\left[','')
+    latexStr = latexStr.replace('\\right]','')
     
     return latexStr
 
@@ -48,6 +52,11 @@ def bmatrix(M, dec=5):
     # https://www.math-linux.com/latex-26/faq/latex-faq/article/how-to-write-matrices-in-latex-matrix-pmatrix-bmatrix-vmatrix-vmatrix
     
     return matrix(M,mtype='bmatrix',dec=dec)
+
+def m2l(M):
+    """Wrapper function with short name"""
+    return bmatrix(M)
+
 
 
 
@@ -71,6 +80,7 @@ if __name__ == "__main__":
     
     print(matrix(A))
     print(pmatrix(S, 3))
+    print(m2l(A))
 
 # version 2
 
