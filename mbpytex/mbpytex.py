@@ -55,8 +55,16 @@ def bmatrix(M, dec=5):
 
 def m2l(M):
     """Wrapper function with short name"""
-    return bmatrix(M)
-
+    import numpy as np
+    
+    if hasattr(M, "__len__"):
+        # numpy or sympy matrix
+        ret = bmatrix(M)
+    else:    
+        # if scalar or sympy symbol
+        ret = str(M)        
+        
+    return ret
 
 
 
@@ -67,7 +75,7 @@ if __name__ == "__main__":
     import numpy as np
     import sympy as sp
     
-    A = np.array([[1/3,2,1],
+    N = np.array([[1/3,2,1],
                    [0,3,1],
                    [2,1,1]])
     
@@ -78,9 +86,9 @@ if __name__ == "__main__":
                    [2,1,k]])
     
     
-    print(matrix(A))
+    print(matrix(N))
     print(pmatrix(S, 3))
-    print(m2l(A))
+    print(m2l(N))
 
 # version 2
 

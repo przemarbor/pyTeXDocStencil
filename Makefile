@@ -19,7 +19,7 @@ clean-auxiliary:
 build:
 	pdflatex PythonTeX_mb_Stencil.tex
 	pythontex3 PythonTeX_mb_Stencil.tex
-	pdflatex PythonTeX_mb_Stencil.tex
+	pdflatex -synctex=1 -interaction=nonstopmode PythonTeX_mb_Stencil.tex
 	
 # Plonk the following at the end of your Makefile
 .DEFAULT_GOAL := help

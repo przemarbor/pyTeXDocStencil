@@ -5,5 +5,7 @@
 *.pdf
 *.pytxcode
 *.synctex.gz
+ZZZ_NextCommitMessage.txt
+
 */__pycache__/
 pythontex-files-*
