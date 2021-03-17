@@ -172,21 +172,33 @@ figuresFolder  = 'figures/'
 
 \usepackage{subfigure}
 
-
+% % % % % % % % % % % % % COMMENTS 
+% % short or inline comments, or TODO comments
 % if you want to compress all
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 %\usepackage[colorinlistoftodos,prependcaption,textsize=tiny,disable]{todonotes}
 
 \usepackage{xargs}    % Use more than one optional parameter in the new commands
+\usepackage{soulutf8}          % \ul for diacritics - used for striking out in \MBe command
+
 % margin note
 \newcommandx{\MB}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
 % plain text note 
-% \newcommand{\MBp}{\textcolor{red!75}}  <- this does not work on paragraphs
 \newcommand{\MBp}[1]{{\leavevmode\color{red!75}#1}}
-% edit
-\newcommand{\MBe}[2]{{\leavevmode\color{red!75}{#1}}{{\leavevmode\color{red!25}\st{#2}}}}
+% edit note
+\newcommand{\MBe}[2]{{\leavevmode\color{red!75}{#1}}{{\leavevmode\color{red!50}\st{#2}}}}
+
+% % longer parts of the comments 
+\usepackage{comment}
+\includecomment{private-comment}
+% \excludecomment{private-comment}
+\includecomment{answers}
+%\excludecomment{answers}
 
 
+\newtheorem{definition}{Definicja}
+\newtheorem{exercise}{Zadanie }
+\newtheorem{solution}{Rozwiązanie }
 
 %% dots after section/subsection number in Table of Contents
 %\usepackage{tocloft} 					
@@ -249,7 +261,7 @@ print(s)
 \item 
 \verb|begin{pysub}| -- " useful for inserting Python-generated content in contexts where the normal \verb|\py| and \verb|\pyc| would not function or would be inconvenient due to the restrictions imposed by LATEX. Since Python processes $\langle code \rangle$ and performs substitutions before the result is passed to LATEX, substitution fields may be anywhere."
 
-{\bf I stumbled on the errors when depythonizing the source while having \verb|\pysub| environment in it}. That is why \verb|\pysub| code is commented out in this document.
+{\bf I stumbled upon the errors when depythonizing the source while having \verb|\pysub| environment in it}. That is why \verb|\pysub| code is commented out in this document.
 
 %\begin{pysub}
 %a = 123.45
@@ -488,6 +500,36 @@ plt.savefig(figuresFolder+'myplot.png', bbox_inches='tight')
 
 
 
+\subsection{Using comments}
+
+\subsubsection{'todo' package}
+For short, inline comments or TODO comments use \verb|todo| package like this:
+\MB{This is todo margin note}
+
+\MBp{This is short inline comment}
+
+%\MBe{This is old part of text}{Proposal of the new version}
+\MBe{New}{Old}
+
+\subsubsection{'comment' package}
+For larger parts of the text use \verb|comment| environment. After defining the specific environments at the beginning of the document we can use them like this:
+
+\vspace{0.5cm}
+
+\begin{private-comment}
+This is a text with a private comment which will be excluded in the final, official version of the manuscript.
+\end{private-comment}
+
+\vspace{0.5cm}
+
+\begin{exercise}\
+This is a text of an exercise that will be visible in the final version of the manuscript.
+
+\end{exercise}
+
+\begin{answers}
+This a test of an answer that will be excluded from the final version of the manuscript.
+\end{answers}
 
 
 

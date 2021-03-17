@@ -9,6 +9,7 @@
 ## Clean auxiliary and temporary files
 clean-auxiliary:
 	find . -name '*.aux' -exec rm --force {} \;
+	find . -name '*.cut' -exec rm --force {} \;
 	find . -name '*.depytx' -exec rm --force {} \; 
 	find . -name '*.log' -exec rm --force {} \; 	
 	find . -name '*.pytxcode' -exec rm --force {} \; 
