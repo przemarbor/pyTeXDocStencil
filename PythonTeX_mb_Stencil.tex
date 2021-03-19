@@ -482,11 +482,15 @@ You may want to use matplotlib's PGF backend when creating plots.
 import matplotlib.pyplot as plt
 import numpy as np
 
-plt.rc('text', usetex=True)
-plt.rc('font', family='serif')
-plt.rc('font', size=10.0)
-plt.rc('legend', fontsize=10.0)
-plt.rc('font', weight='normal')
+setTeXLikeFonts(plt)
+
+# plt.rc('text', usetex=True)
+# plt.rc('font', family='serif')
+# plt.rc('font', size=10.0)
+# plt.rc('legend', fontsize=10.0)
+# plt.rc('font', weight='normal')
+
+
 
 x = np.linspace(0, 10)
 plt.figure(figsize=(4, 2.5))
@@ -501,6 +505,56 @@ plt.savefig(figuresFolder+'myplot.png', bbox_inches='tight')
 \begin{center}
 \includegraphics{\figuresFolder myplot.pdf}
 \end{center}
+
+\verb|{setTeXLikeFonts(plt)}| function can be run only once per importing \verb|matplotlib.pyplot as plt| (probably the best place is just after import statement, in order to give matplotlib time to apply this settings before first plot rendering). 
+
+When producing plots in a for loop you may need to consider to do it by using \verb|plt.subplots| command like below:
+
+\begin{pyblock}
+import matplotlib.pyplot as plt
+import numpy as np
+
+setTeXLikeFonts(plt)
+
+A = []
+A.append(np.array([[-1,0],
+               [0,-1]]))
+A.append( np.array([[1/2,0],
+               [0,1/3]]))
+A.append( np.array([[0,-1],
+               [1,0]]))
+
+vectors = np.array([[1,2,  0],
+                    [2,0, -3]])
+
+cols = ['r','g','b', 'c','m','y','k']
+
+vecNo = vectors.shape[1]
+
+T = []
+T.append( A[0] @ vectors )
+T.append( A[1] @ vectors )
+T.append( A[2] @ vectors )
+
+n = 3
+
+for i in range(n):
+    fig, ax = plt.subplots()    
+    plt.xlim(-3, 3); plt.ylim(-3, 3) 
+    for j in range(vecNo):
+        ax.arrow(0,0,T[i][0,j], T[i][1,j], head_width=0.3, \
+              head_length=0.5, length_includes_head=True, color = cols[j])
+
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.savefig(figuresFolder+'vectors_transformed_T'+str(i) +'.png',facecolor='w')
+    
+    plt.close()
+    
+\end{pyblock}
+
+\includegraphics[width=7cm]{\figuresFolder vectors_transformed_T0.png}
+\includegraphics[width=7cm]{\figuresFolder vectors_transformed_T1.png}
+\includegraphics[width=7cm]{\figuresFolder vectors_transformed_T2.png}
 
 
 

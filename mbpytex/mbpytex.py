@@ -67,6 +67,13 @@ def m2l(M):
     return ret
 
 
+def setTeXLikeFonts(plt):
+    """ LaTeX-style fonts in pyplots"""
+    plt.rc('text', usetex=True)
+    plt.rc('font', family='serif')
+    plt.rc('font', size=10.0)
+    plt.rc('legend', fontsize=10.0)
+    plt.rc('font', weight='normal')
 
 
 if __name__ == "__main__":

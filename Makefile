@@ -9,6 +9,8 @@
 ## Clean auxiliary and temporary files
 clean-auxiliary:
 	find . -name '*.aux' -exec rm --force {} \;
+	find . -name '*.bbl' -exec rm --force {} \;
+	find . -name '*.blg' -exec rm --force {} \;
 	find . -name '*.cut' -exec rm --force {} \;
 	find . -name '*.depytx' -exec rm --force {} \; 
 	find . -name '*.log' -exec rm --force {} \; 	
